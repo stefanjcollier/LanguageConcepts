@@ -16,9 +16,23 @@ type langFunc =
 | Last of  (int * language)
 ;;
 
-
-let handleWordFunc = function
-| Concat (Word w1 , Word w2) -> Word(w1^w2)
+type func = 
+| Output of language
 ;;
 
 
+let handleFunc w : word = function
+| Concat (Word w1 , Word w2) -> Word(w1^w2)
+;;
+
+let tidy inp = 
+	let aux inp =
+		let pos = String.index inp ':' in
+	String.concat (String.sub inp 0 pos) (String.sub inp (pos+1) (String.length - pos))
+in
+	if String.contains inp ':'
+	then 
+		tidy aux inp
+	else
+		inp
+;;

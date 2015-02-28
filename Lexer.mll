@@ -5,16 +5,16 @@
 exception Eof
 }
 
+(* Brackets ? *)
 rule token = parse
 | [' ' '\t' ] {token lexbuf}
-| "Happy Ending" { EXPR_END }
+| "Happy Ending" | "<3" | ['\n'] { EXPR_END }
 | '{' { LCURL }
 | '}' { RCURL}
-(* Brackets ? *)
 
 | "{}" { EMPTY_SET }
 
-| "\/" { UNION }
+| "\\/" { UNION }
 | "/\\" { INTERSECT }
 | '\\' { SUBTRACT }
 
