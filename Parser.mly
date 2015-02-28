@@ -1,6 +1,7 @@
+/* File Parser.mly */
 %{
   open LOVE
-}%
+%}
 
 %token <int> INT
 %token <string> WORD
@@ -16,7 +17,7 @@
 %left UNION INTERSECT SUBTRACT
 
 %start main
-%type ? main
+%type <Urrrmmmm> main
 %%
 main :
 	program { $1 }
@@ -37,7 +38,7 @@ language :
  |language langfunc language	{ $2 ($1, $3)}
  |FIRST INT language			{ First( $2, $3) }
  |LAST INT language				{ Last( $2, $3) }
- (*|LANG_VAR *)
+ /*|LANG_VAR */
 ;
 langbody :
  | word COMMA langbody	{ Cons ( Word $1 , $3)}
@@ -46,12 +47,12 @@ langbody :
 
 word : 
  | WORD 			{ Word($1)}
- | word CONCAT word { Concat ($1, $3)}
- (*| WORD_VAR *)
-(* 
+ | word CONCAT word {   }\
+ /*| WORD_VAR */
+/*   
  | WORD STAR
  | WORD PLUS
-*)
+*/
 ;
 langfunc : 
  | UNION 		{ Union }
@@ -62,8 +63,8 @@ langfunc :
 miscFunc:
 | OUTPUT language { Output $2 }
 
-(*
-(* These will add a new entry to our variable tables*)
+/*
+/* These will add a new entry to our variable tables*/
 declare : 
  | DEC LAND_VAR
  | DEC WORD_VAR
@@ -75,7 +76,7 @@ redeclare :
  | WORD_VAR EQUALS word
  | INT_VAR EQUALS INT
 ;
-*)
+*/
 
 
 (*

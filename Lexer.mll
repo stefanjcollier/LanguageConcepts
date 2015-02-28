@@ -8,7 +8,7 @@ exception Eof
 (* Brackets ? *)
 rule token = parse
 | [' ' '\t' ] {token lexbuf}
-| "Happy Ending" | "<3" { EXPR_END }
+| "Happy Ending" | "<3" | ['\n'] { EXPR_END }
 | '{' { LCURL }
 | '}' { RCURL}
 
