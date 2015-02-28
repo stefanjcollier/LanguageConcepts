@@ -23,7 +23,13 @@ main :
 ;
 
 program : 
+| expr { $1 }
+| expr program { $1 $2 }
+;;
+expr : 
 | language EXPR_END { $1 }
+| miscFunc { $1 }
+;;
 
 language :
  |LCURL langbody RCURL 		{ $2 }
