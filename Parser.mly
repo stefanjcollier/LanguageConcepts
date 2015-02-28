@@ -1,33 +1,46 @@
 %{
-
+  open LOVE
 }%
 
-%token
+%token <int> INT
+%token <string> WORD
+%token INT_VAR WORD_VAR LANG_VAR 
+%token LCURL COMMA RCURL EMPTY_SET 
+%token UNION INTERSECT SUBTRACT
+%token CONCAT
+%token FIRST LAST
+%token DEC EQUALS
+%token OUTPUT EXPR_END
+
+%left CONCAT 
+%left UNION INTERSECT SUBTRACT
 
 %start main
 %type ? main
 %%
 main :
-	?
+	program { $1 }
 ;
+
+program : 
+| language EXPR_END { $1 }
 
 language :
- |LCURL langbody RCURL 		{}
- |EMPTY_SET			{}
- |language langfunc language	{}
- |FIRST INT language		{}
- |LAST INT language		{}
+ |LCURL langbody RCURL 		{ $2 }
+ |EMPTY_SET					{ EmptySet }
+ |language langfunc language	{ $2 ($1, $3)}
+ |FIRST INT language			{ First( $2, $3) }
+ |LAST INT language				{ Last( $2, $3) }
  (*|LANG_VAR *)
 ;
-
 langbody :
- | word COMMA langbody	{}
- | word	{}
-;
+ | word COMMA langbody	{ Cons ( Word $1 , $3)}
+ | word					{ Cons ( Word $1, EmptySet)}
+;  
 
 word : 
- | WORD
- | word CONCAT word
+ | WORD 			{ Word($1)}
+ | word CONCAT word { Concat ($1, $3)}
  (*| WORD_VAR *)
 (* 
  | WORD STAR
@@ -35,11 +48,14 @@ word :
 *)
 ;
 langfunc : 
- | UNION 
- | INTERSECT 
- | SUBTRACT
-(* Powerset? *)
+ | UNION 		{ Union }
+ | INTERSECT 	{ Intersection }
+ | SUBTRACT 	{ Subtraction }
 ;
+
+miscFunc:
+| OUTPUT language { Output $2 }
+
 (*
 (* These will add a new entry to our variable tables*)
 declare : 

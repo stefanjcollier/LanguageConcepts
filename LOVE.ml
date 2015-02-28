@@ -16,6 +16,10 @@ type langFunc =
 | Last of  (int * language)
 ;;
 
+type func = 
+| Output of language
+;;
+
 
 let handleWordFunc = function
 | Concat (Word w1 , Word w2) -> Word(w1^w2)
