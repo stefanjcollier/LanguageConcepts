@@ -5,5 +5,5 @@ type token =
   | EOL
   | PROG_END
 
-val main :
-  (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> string
+val main1 :
+  (Lexing.lexbuf  -> token) -> Lexing.lexbuf -> love.results

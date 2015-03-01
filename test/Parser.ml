@@ -8,14 +8,8 @@ type token =
 open Parsing;;
 let _ = parse_error;;
 # 3 "Parser.mly"
-	type results = 
-	  | Word of string
-	  | MoreWords of (results * results)
-	  ;;
-;;
-
-
-# 19 "Parser.ml"
+	open love
+# 13 "Parser.ml"
 let yytransl_const = [|
   258 (* CONCAT *);
   259 (* EXP_END *);
@@ -74,51 +68,51 @@ let yynames_block = "\
 let yyact = [|
   (fun _ -> failwith "parser")
 ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'prog) in
+    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'prog1) in
     Obj.repr(
-# 19 "Parser.mly"
-                        ( _1 )
-# 82 "Parser.ml"
-               : string))
+# 28 "Parser.mly"
+                           ( _1 )
+# 76 "Parser.ml"
+               : love.results))
 ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'wordExpr) in
+    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'wordExpr1) in
     Obj.repr(
-# 23 "Parser.mly"
-                       ( _1 )
-# 89 "Parser.ml"
-               : 'prog))
+# 32 "Parser.mly"
+                        ( Word(_1) )
+# 83 "Parser.ml"
+               : 'prog1))
 ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 3 : 'wordExpr) in
-    let _4 = (Parsing.peek_val __caml_parser_env 0 : 'prog) in
+    let _1 = (Parsing.peek_val __caml_parser_env 3 : 'wordExpr1) in
+    let _4 = (Parsing.peek_val __caml_parser_env 0 : 'prog1) in
     Obj.repr(
-# 24 "Parser.mly"
-                            ( _1 ^"\n" ^ _4 )
-# 97 "Parser.ml"
-               : 'prog))
+# 33 "Parser.mly"
+                              ( MoreWords( Word(_1), _4) )
+# 91 "Parser.ml"
+               : 'prog1))
 ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'wordExpr) in
-    let _3 = (Parsing.peek_val __caml_parser_env 0 : 'prog) in
+    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'wordExpr1) in
+    let _3 = (Parsing.peek_val __caml_parser_env 0 : 'prog1) in
     Obj.repr(
-# 25 "Parser.mly"
-                        ( _1 ^"\n" ^ _3 )
-# 105 "Parser.ml"
-               : 'prog))
+# 34 "Parser.mly"
+                          ( MoreWords( Word(_1), _3) )
+# 99 "Parser.ml"
+               : 'prog1))
 ; (fun __caml_parser_env ->
     let _1 = (Parsing.peek_val __caml_parser_env 0 : string) in
     Obj.repr(
-# 28 "Parser.mly"
+# 38 "Parser.mly"
        ( _1 )
-# 112 "Parser.ml"
-               : 'wordExpr))
+# 106 "Parser.ml"
+               : 'wordExpr1))
 ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'wordExpr) in
-    let _3 = (Parsing.peek_val __caml_parser_env 0 : 'wordExpr) in
+    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'wordExpr1) in
+    let _3 = (Parsing.peek_val __caml_parser_env 0 : 'wordExpr1) in
     Obj.repr(
-# 29 "Parser.mly"
-                           ( _1^_3 )
-# 120 "Parser.ml"
-               : 'wordExpr))
-(* Entry main *)
+# 39 "Parser.mly"
+                             ( _1^_3 )
+# 114 "Parser.ml"
+               : 'wordExpr1))
+(* Entry main1 *)
 ; (fun __caml_parser_env -> raise (Parsing.YYexit (Parsing.peek_val __caml_parser_env 0)))
 |]
 let yytables =
@@ -138,5 +132,5 @@ let yytables =
     Parsing.error_function=parse_error;
     Parsing.names_const=yynames_const;
     Parsing.names_block=yynames_block }
-let main (lexfun : Lexing.lexbuf -> token) (lexbuf : Lexing.lexbuf) =
-   (Parsing.yyparse yytables 1 lexfun lexbuf : string)
+let main1 (lexfun : Lexing.lexbuf -> token) (lexbuf : Lexing.lexbuf) =
+   (Parsing.yyparse yytables 1 lexfun lexbuf : love.results)
