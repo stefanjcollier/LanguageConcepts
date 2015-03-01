@@ -5,7 +5,7 @@ type word =
 
 type language =
  | EmptySet  
- | Cons of (word * language)
+ | Cons of (string * language)
 ;;
 
 type langFunc = 
