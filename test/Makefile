@@ -1,7 +1,7 @@
-ocamllex lexer.mll
-ocamlyacc parser.mly
-ocamlc -c parser.mli
-ocamlc -c lexer.ml
-ocamlc -c parser.ml
+ocamllex Lexer.mll
+ocamlyacc Parser.mly
+ocamlc -c Parser.mli
+ocamlc -c Lexer.ml
+ocamlc -c Parser.ml
 ocamlc -c love.ml
-ocamlc -o love lexer.cmo parser.cmo love.cmo
+ocamlc -o love Lexer.cmo Parser.cmo love.cmo

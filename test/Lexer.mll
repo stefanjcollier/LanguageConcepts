@@ -4,12 +4,12 @@
 	exception Eof
 }
 
-(* Added EOL *)
 
 rule token = parse
- [' ' '\t' ]  { token lexbuf }
-| ['\n'] { EOL }
-| "Happy Ending" { EXP_END }
+ [' ' '\t']  { token lexbuf }
+| ['\n']  { EOL }
+| "Happy Ending" | "<3" { EXP_END }
 | '^' { CONCAT }
 | ['a'-'z' ':']+ as wrd { WORD(wrd) }
+| "</3" { PROG_END }
 | eof { raise Eof }
