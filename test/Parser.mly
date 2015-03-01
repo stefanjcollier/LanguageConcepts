@@ -13,7 +13,11 @@
 main: prog { $1 }
 ;
 
-prog: expr EXP_END { $1 }
+prog: expr end { $1 }
+;
+
+end :
+| EXP_END | EOL | end end {}
 ;
 
 expr: WORD { $1 }
