@@ -1,6 +1,6 @@
 /* File Parser.mly */
 %{
-	open love
+	open Path
 %}
 
 %token <string> WORD
