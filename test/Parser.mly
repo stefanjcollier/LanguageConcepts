@@ -1,15 +1,15 @@
 /* File Parser.mly */
 %{
-	;;
+	open Path
 %}
 
 %token <string> WORD
 %token CONCAT EXP_END EOL PROG_END
 %left CONCAT
 %start main
-%type <string> main
+%type <Path.results> main
 %%
-
+/*
 main: prog PROG_END EOL { $1 }
 ;
 
@@ -23,19 +23,18 @@ wordExpr:
 | WORD { $1 }
 | wordExpr CONCAT wordExpr { $1^$3 }
 ;
+*/
 
-/*
-main1 : prog1 PROG_END EOL { $1 }
+main : prog PROG_END EOL { $1 }
 ;
 
-prog1:  
-| wordExpr1 EXP_END EOL { Word($1) }
-| wordExpr1 EXP_END EOL prog1 { MoreWords( Word($1), $4) }
-| wordExpr1 EXP_END prog1 { MoreWords( Word($1), $3) }
+prog:  
+| wordExpr EXP_END EOL { Word($1) }
+| wordExpr EXP_END EOL prog { MoreWords( Word($1), $4) }
+| wordExpr EXP_END prog { MoreWords( Word($1), $3) }
 ;
-
-wordExpr1: 
+wordExpr: 
 | WORD { $1 }
-| wordExpr1 CONCAT wordExpr1 { $1^$3 }
+| wordExpr CONCAT wordExpr { $1^$3 }
 ;
 /**/
