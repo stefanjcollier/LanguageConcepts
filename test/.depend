@@ -1,0 +1,10 @@
+Path.cmi:
+Parser.cmi: Path.cmi
+Love.cmo: Parser.cmi Lexer.cmo Path.cmi
+Love.cmx: Parser.cmx Lexer.cmx Path.cmx
+Path.cmo: Path.cmi
+Path.cmx: Path.cmi
+Lexer.cmo: Parser.cmi
+Lexer.cmx: Parser.cmx
+Parser.cmo: Path.cmi Parser.cmi
+Parser.cmx: Path.cmx Parser.cmi

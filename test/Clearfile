@@ -1,4 +1,0 @@
-rm Lexer.ml
-rm *.cm*
-rm Parser.ml
-rm Parser.mli
