@@ -38,6 +38,7 @@ let rec convert_literal_lang = function
  | Empty_Set -> WordSet.empty 
  | Cons (word, more) -> WordSet.add word ( convert_literal_lang more )
 ;;
+ 
 
 (* Retrieves the set ascociated with the variable or derived from the literal 
    @Returns a SET*)
@@ -55,17 +56,20 @@ let redeclare = function
  | IntDeclaration(str, vl) -> Hashtbl.replace   int_hash  str  vl
 ;;
 
-
-(* Takes a WordSet obj and print_string's a set *)
-let print_language lang =
+let language_to_string lang = 
 	let rec aux (lst:string list) = 
 	match lst with
  		| [] -> "}"
  		| [x] -> x^"}"
- 		| h::t -> h^", "^(aux lst)
+ 		| h::t -> h^", "^(aux t)
 	 in
-	 print_string ("{"^aux (WordSet.elements lang) )
+	 "{"^aux (WordSet.elements (solve_lang lang))^"\n" 
 ;;
+(* Takes a WordSet obj and print_string's a set *)
+let print_language lang =
+	 print_string (language_to_string lang)
+;;
+
 
 let print_language_max max lang =
 	let rec aux (lst:string list) accum = 
@@ -76,14 +80,15 @@ let print_language_max max lang =
  				then h^"}" 
  				else h^", "^aux t (accum+1)
 	 in
-	 print_string ("{"^aux(WordSet.elements lang) 0)
+	 print_string (("{"^aux(WordSet.elements (solve_lang lang)) 0)^"\n")
 ;;
 
 let rec interpret (prog:program) =
 	match prog with
-	| Output (lang)-> (print_language (solve_lang lang)); 
+	| Output (lang)-> (print_language lang); 
 	| Declaration(decObj) -> redeclare decObj;
-	| Statement( lang )-> print_string ""; 
-	| WStatement( word )-> print_string "";
+	| Statement( lang )-> print_string ("unassigned lang: "^(language_to_string lang)); 
+	| WStatement( word )-> print_string ("unassigned word:"^word^"\n");
+
 	| Statements ( head, tail ) -> interpret head; interpret tail;
 ;;
