@@ -6,9 +6,10 @@
 %token <string> WORD
 %token CONCAT EXP_END EOL PROG_END
 %token LCURL RCURL EMPTY_SET COMMA
-%left CONCAT
+%token UNION
+%token OUTPUT
+%left CONCAT UNION
 %start main
-
 %type <Path.generic> main
 %%
 
@@ -16,17 +17,21 @@ main: prog PROG_END EOL { $1 }
 ;
 
 prog:
-| languageExpr EXP_END EOL { GenL($1) }
-| languageExpr EXP_END EOL prog { GenMulti( GenL($1), $4) }
-| languageExpr EXP_END prog { GenMulti( GenL($1), $3) }
-| wordExpr EXP_END EOL { GenW($1) }
-| wordExpr EXP_END EOL prog { GenMulti( GenW($1), $4) }
-| wordExpr EXP_END prog { GenMulti( GenW($1), $3) }
+| expr EXP_END EOL { $1 }
+| expr EXP_END EOL prog { GenMulti( $1, $4) }
+| expr EXP_END prog { GenMulti( $1, $3) }
+;
+
+expr : 
+| languageExpr 		{ GenL($1) }
+| wordExpr 			{ GenW($1) }
+| OUTPUT languageExpr { Output($2) }
 ;
 
 languageExpr :
- |LCURL langbody RCURL 		{ $2 }
- |EMPTY_SET					{ EmptySet }
+ | LCURL langbody RCURL 		{ $2 }
+ | EMPTY_SET					{ EmptySet }
+ | languageExpr UNION languageExpr { Union($1, $3) }
  ;
 
  langbody :

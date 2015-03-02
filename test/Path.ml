@@ -14,6 +14,7 @@ let rec print_morewords res =
 type language =
  | EmptySet  
  | Cons of (string * language)
+ | Union of (language * language)
 ;;
 
 
@@ -21,11 +22,13 @@ type generic =
  | GenW of string
  | GenL of language
  | GenMulti of (generic * generic)
+ | Output of language
 ;;
 
 let print_language lang =
 	let rec aux inp = 
 		match inp with
+		| Union (l1,l2) -> "[Union] <lang> {" ^ aux l1 ^ aux l2 ^"}"
 	 	| Cons ( s , l) -> s ^", " ^ (aux l)
 	 	| EmptySet -> "" 
 	 in
@@ -34,9 +37,10 @@ let print_language lang =
 
 let rec print_generic res =
 	match res with
-	| GenL (l) -> print_string (print_language l)
-	| GenW (w) -> print_string ("<word> "^w)
+	| GenL (l) -> print_string ((print_language l)^"\n")
+	| GenW (w) -> print_string ("<word> "^w^"\n")
 	| GenMulti (g1 , g2) -> print_generic g1 ; print_generic g2;
+	| Output (l) -> print_string ("Output:"^(print_language l)^"\n")
 ;;
 
 

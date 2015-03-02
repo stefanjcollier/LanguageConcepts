@@ -15,7 +15,12 @@ rule token = parse
 | '}' { RCURL}
 | ',' { COMMA }
 
+| "\\/" { UNION }
+
 | '^' { CONCAT }
 | ['a'-'z' ':']+ as wrd { WORD(wrd) }
+
 | "</3" { PROG_END }
+| "Out" { OUTPUT }
+
 | eof { raise Eof }
