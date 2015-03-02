@@ -15,8 +15,11 @@ type language =
 
 type program =
  | Output of language
+ | LangDeclaration of (string * language)
+ | WordDeclaration of (string * string)
+ | IntDeclaration of  (string * int)
  | Statement of language
- | Statements of (language * program)
+ | Statements of (program * program)
 ;;
 
  (* Converts the data type into a set *)
@@ -25,7 +28,7 @@ let rec convert_literal_lang = function
  | Cons (word, more) -> WordSet.add word ( convert_literal_lang more )
 ;;
 
-let lookup_lang = function
+let lookup_lang  = function
 | _ -> WordSet.empty
 ;;
 
@@ -64,6 +67,10 @@ let print_language_max max lang =
 
 let rec interpret (prog:program) =
 	match prog with
-	| Statement( lang )-> print_language (solve_lang lang); Some 3;
-	| Statements ( lang, more ) -> interpret lang; interpret more; Some 4;
+	| Output (lang )-> (print_language (solve_lang lang)); 
+	| LangDeclaration(var , lang) -> (print_string ("L Declaration of "^var))
+	| WordDeclaration(var , wrd) -> (print_string ("W Declaration of "^var))
+	| IntDeclaration(var , num) -> (print_string ("I Declaration of "^var))
+	| Statement( lang )-> print_string ""; 
+	| Statements ( head, tail ) -> interpret head; interpret tail;
 ;;
