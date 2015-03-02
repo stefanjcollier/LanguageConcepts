@@ -1,4 +1,7 @@
 module WordSet = Set.Make(String);;
+let lang_hash = Hashtbl.create 100;;
+let word_hash = Hashtbl.create 100;;
+let int_hash = Hashtbl.create 100;;
 
 type lang_literal =
  | Empty_Set
@@ -13,14 +16,22 @@ type language =
  | Subtraction of (language * language)
 ;; 
 
+type decs = 
+ | IntDeclaration of (string * int)
+ | WordDeclaration of (string * string)
+ | LangDeclaration of (string * language)
+;;
+
 type program =
  | Output of language
- | LangDeclaration of (string * language)
- | WordDeclaration of (string * string)
- | IntDeclaration of  (string * int)
+ | Declaration of decs
  | Statement of language
+ | WStatement of string
  | Statements of (program * program)
 ;;
+
+
+
 
  (* Converts the data type into a set *)
 let rec convert_literal_lang = function
@@ -28,19 +39,22 @@ let rec convert_literal_lang = function
  | Cons (word, more) -> WordSet.add word ( convert_literal_lang more )
 ;;
 
-let lookup_lang  = function
-| _ -> WordSet.empty
-;;
-
 (* Retrieves the set ascociated with the variable or derived from the literal 
    @Returns a SET*)
 let rec solve_lang = function
  | LangLiteral(lit) -> 		convert_literal_lang lit
- | LangVariable(var) -> 	lookup_lang var
+ | LangVariable(var) -> 	Hashtbl.find lang_hash var
  | Union (l1, l2) -> 		WordSet.union (solve_lang l1) (solve_lang l2)
  | Intersection (l1, l2) -> WordSet.inter (solve_lang l1) (solve_lang l2) 
  | Subtraction (l1, l2) -> 	WordSet.diff  (solve_lang l1) (solve_lang l2) 
 ;;
+
+let redeclare = function
+ | LangDeclaration(str , vl) -> Hashtbl.replace lang_hash str (solve_lang vl)
+ | WordDeclaration(str, vl) -> Hashtbl.replace  word_hash str  vl
+ | IntDeclaration(str, vl) -> Hashtbl.replace   int_hash  str  vl
+;;
+
 
 (* Takes a WordSet obj and print_string's a set *)
 let print_language lang =
@@ -67,10 +81,9 @@ let print_language_max max lang =
 
 let rec interpret (prog:program) =
 	match prog with
-	| Output (lang )-> (print_language (solve_lang lang)); 
-	| LangDeclaration(var , lang) -> (print_string ("L Declaration of "^var))
-	| WordDeclaration(var , wrd) -> (print_string ("W Declaration of "^var))
-	| IntDeclaration(var , num) -> (print_string ("I Declaration of "^var))
+	| Output (lang)-> (print_language (solve_lang lang)); 
+	| Declaration(decObj) -> redeclare decObj;
 	| Statement( lang )-> print_string ""; 
+	| WStatement( word )-> print_string "";
 	| Statements ( head, tail ) -> interpret head; interpret tail;
 ;;
