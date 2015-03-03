@@ -2,6 +2,8 @@ module WordSet = Set.Make(String);;
 let lang_hash = Hashtbl.create 100;;
 let word_hash = Hashtbl.create 100;;
 let int_hash = Hashtbl.create 100;;
+let variable_counter = ref 0;;
+let word_limit = ref 1000;;
 
 type word = 
  | WordLiteral of string
@@ -25,7 +27,7 @@ type language =
 type integer = 
 | IntLiteral of int
 | IntVariable of string
-
+;;
 type decs = 
  | IntDeclaration of (string * int)
  | WordDeclaration of (string * word)
@@ -40,6 +42,10 @@ type program =
  | Statements of (program * program)
 ;;
 
+type input = 
+ | Integer of int
+ | MultiLangauges of (lang_literal * input)
+;;
 
 let rec solve_word = function
  | WordLiteral(str) -> str
@@ -84,12 +90,12 @@ let print_language lang =
 ;;
 
 
-let print_language_max max lang =
+let output_language (lang:language) =
 	let rec aux (lst:string list) accum = 
 	match lst with
  		| [] -> "}"
  		| [x] -> (x^"}")
- 		| h::t -> if accum+1 = max 
+ 		| h::t -> if accum+1 = !word_limit 
  				then h^"}" 
  				else h^", "^aux t (accum+1)
 	 in
@@ -98,13 +104,26 @@ let print_language_max max lang =
 
 let rec interpret (prog:program) =
 	match prog with
-	| Output (lang)-> (print_language lang); 
+	| Output (lang)-> (output_language lang); 
 	| Declaration(decObj) -> redeclare decObj;
 	| Statement( lang )-> print_string ("unassigned lang: "^(language_of_string lang)); 
 	| WStatement( word )-> print_string ("unassigned word:"^(solve_word word)^"\n");
 	| Statements ( head, tail ) -> interpret head; interpret tail
 ;;
 
+
+let add_input_lang lang = 
+	variable_counter := (!variable_counter + 1);
+	let name = "@Lang"^(string_of_int !variable_counter )in
+		Hashtbl.replace lang_hash name (solve_lang lang)
+;;
+
+let rec encorperate (inp:input) = 
+	match inp with
+	| MultiLangauges( lang_lit, more ) -> add_input_lang (LangLiteral(lang_lit)); encorperate more;
+	| Integer( num ) -> word_limit := num;
+;;
+
 let main prog inp = 
-	 interpret prog; interpret inp; 	
+	 encorperate inp; interpret prog; 	
 ;;
