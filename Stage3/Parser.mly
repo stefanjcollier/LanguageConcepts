@@ -34,8 +34,8 @@ languageExpr :
  | LCURL langbody RCURL 		{ LangLiteral($2) }
  | EMPTY_SET					{ LangLiteral(Empty_Set) }
  | languageExpr UNION languageExpr { Union($1, $3) }
- | languageExpr INTERSECT languageExpr { Union($1, $3) }
- | languageExpr SUBTRACT languageExpr { Union($1, $3) }
+ | languageExpr INTERSECT languageExpr { Intersection($1, $3) }
+ | languageExpr SUBTRACT languageExpr { Subtraction($1, $3) }
 ;
 
 langbody :
