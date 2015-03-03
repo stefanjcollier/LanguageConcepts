@@ -10,12 +10,13 @@
 %token <string> LANG_VAR
 %token EXP_END EOL PROG_END
 %token LCURL RCURL EMPTY_SET COMMA EQUALS
+%token <string> REGEX
 %token CONCAT
 %token UNION INTERSECT SUBTRACT
 %token OUTPUT 
 
 %left UNION INTERSECT SUBTRACT
-%left CONCAT 
+%left CONCAT  
 %start main
 %type <Path.program> main
 %%
@@ -51,6 +52,8 @@ languageExpr :
  | languageExpr INTERSECT languageExpr { Intersection($1, $3) }
  | languageExpr SUBTRACT languageExpr { Subtraction($1, $3) }
  | languageExpr CONCAT languageExpr { LangConcat($1, $3) }
+ | languageExpr INTERSECT REGEX { OnlyRegex ($1, $3) }
+ | languageExpr SUBTRACT REGEX { RemoveRegex ($1 , $3) }
 ;
 
 langbody :

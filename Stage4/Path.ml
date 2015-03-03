@@ -1,3 +1,5 @@
+open Str
+
 module WordSet = Set.Make(String);;
 let lang_hash = Hashtbl.create 100;;
 let word_hash = Hashtbl.create 100;;
@@ -21,6 +23,8 @@ type language =
  | Intersection of (language * language)
  | Subtraction of (language * language)
  | LangConcat of (language * language)
+ | OnlyRegex of (language * string)
+ | RemoveRegex of (language * string)
 ;;
 
 type integer = 
@@ -92,7 +96,17 @@ let lang_concat s1 s2 =
 	let res = list_concat (WordSet.elements s2) (WordSet.elements s1) in
 	List.fold_right WordSet.add res WordSet.empty
 ;;
-
+(*
+let only_regex l1 reg =
+	match l1 with
+	| [] -> []
+	| h::t -> if 
+;;
+let regex s1 reg =
+	let res = only_regex (WordSet.elements s1) reg in
+	List.fold_right WordSet.add res WordSet.empty
+;;
+*)
 
 (* Retrieves the set ascociated with the variable or derived from the literal 
    @Returns a SET*)
@@ -103,6 +117,8 @@ let rec solve_lang = function
  | Intersection (l1, l2) -> WordSet.inter (solve_lang l1) (solve_lang l2) 
  | Subtraction (l1, l2) -> 	WordSet.diff  (solve_lang l1) (solve_lang l2)
  | LangConcat (l1, l2) ->  lang_concat (solve_lang l1) (solve_lang l2)
+ | OnlyRegex (l, reg) -> WordSet.filter (fun str -> (Str.string_match (Str.regexp (String.sub reg 1 ((String.length reg) - 2)))) str 0) (solve_lang l)
+ | RemoveRegex (l, reg) -> WordSet.diff (solve_lang l) (WordSet.filter (fun str -> (Str.string_match (Str.regexp (String.sub reg 1 ((String.length reg) - 2)))) str 0) (solve_lang l))
 ;;
 
 let redeclare = function

@@ -18,6 +18,7 @@ rule token = parse
 | "\\/" { UNION }
 | "/\\" { INTERSECT }
 | "\\"	{ SUBTRACT }
+| '\"'['a'-'z' 'A'-'Z' '0'-'9' ' ' '+' '*' ')' '(' '?' '|' '[' ']' '*' '^' '}' '{' ',' '\\' '!' '$' '-' ':']+'\"' as reg { REGEX(reg) }
 
 | '=' { EQUALS }
 | '^' { CONCAT }
