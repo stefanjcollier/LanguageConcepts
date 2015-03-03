@@ -1,0 +1,21 @@
+        OCaml version 4.01.0
+
+#                       * *     
+[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A[A# open Path
+  
+  let _ = 
+  	(*try*) 
+  		let progBuf = Lexing.from_channel (open_in Sys.argv.(1)) in
+  		let prog = Parser.main Lexer.token progBuf; 
+  		let inpBuf = Lexing.from_channel (open_in Sys.argv.(2)) in
+  		let inp = Parser.main Lexer.token inpBuf in
+  			main prog input; 
+  			print_newline(); 
+  			flush stdout
+  			(*with Lexer.Eof ->
+  		print_string "Adios Mother fucker" ;
+  			exit 0*)
+  
+[24m
+Error: Syntax error
+# 
