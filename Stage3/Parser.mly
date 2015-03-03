@@ -32,7 +32,7 @@ expr :
  | languageExpr 		{ Statement($1) }
  | wordExpr 			{ WStatement($1) }
  | OUTPUT languageExpr { Output($2) }
- | dec {Declaration( $1 )}
+ | dec {Declaration( $1 )}                                
 ;
 
 dec:
@@ -45,10 +45,11 @@ dec:
 languageExpr :
  | LCURL langbody RCURL 		{ LangLiteral($2) }
  | EMPTY_SET					{ LangLiteral(Empty_Set) }
+ | LANG_VAR { LangVariable ( $1 ) }
  | languageExpr UNION languageExpr { Union($1, $3) }
  | languageExpr INTERSECT languageExpr { Intersection($1, $3) }
  | languageExpr SUBTRACT languageExpr { Subtraction($1, $3) }
- | LANG_VAR { LangVariable ( $1 ) }
+
 ;
 
 langbody :
@@ -58,6 +59,6 @@ langbody :
 
 wordExpr: 
  | WORD { WordLiteral ($1) }
- | wordExpr CONCAT wordExpr { Concat($1, $3) }
+ | wordExpr CONCAT wordExpr { WordConcat($1, $3) }
  | WORD_VAR { WordVarialbe ($1) } 
 ;

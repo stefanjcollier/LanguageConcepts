@@ -6,7 +6,7 @@ let int_hash = Hashtbl.create 100;;
 type word = 
  | WordLiteral of string
  | WordVarialbe of string
- | Concat of (word * word)
+ | WordConcat of (word * word)
 ;;
 
 type lang_literal =
@@ -44,7 +44,7 @@ type program =
 let rec solve_word = function
  | WordLiteral(str) -> str
  | WordVarialbe(var) -> Hashtbl.find word_hash var
- | Concat(w1, w2) -> (solve_word w1)^(solve_word w2)
+ | WordConcat(w1, w2) -> (solve_word w1)^(solve_word w2)
 ;;
 
  (* Converts the data type into a set *)
@@ -60,7 +60,7 @@ let rec solve_lang = function
  | LangVariable(var) -> 	Hashtbl.find lang_hash var
  | Union (l1, l2) -> 		WordSet.union (solve_lang l1) (solve_lang l2)
  | Intersection (l1, l2) -> WordSet.inter (solve_lang l1) (solve_lang l2) 
- | Subtraction (l1, l2) -> 	WordSet.diff  (solve_lang l1) (solve_lang l2) 
+ | Subtraction (l1, l2) -> 	WordSet.diff  (solve_lang l1) (solve_lang l2)
 ;;
 
 let redeclare = function
