@@ -3,9 +3,15 @@ let lang_hash = Hashtbl.create 100;;
 let word_hash = Hashtbl.create 100;;
 let int_hash = Hashtbl.create 100;;
 
+type word = 
+ | WordLiteral of string
+ | WordVarialbe of string
+ | Concat of (word * word)
+;;
+
 type lang_literal =
  | Empty_Set
- | Cons of (string * lang_literal)
+ | Cons of (word * lang_literal)
 ;;
 
 type language =
@@ -14,11 +20,15 @@ type language =
  | Union of (language * language)
  | Intersection of (language * language)
  | Subtraction of (language * language)
-;; 
+;;
+
+type integer = 
+| IntLiteral of int
+| IntVariable of string
 
 type decs = 
  | IntDeclaration of (string * int)
- | WordDeclaration of (string * string)
+ | WordDeclaration of (string * word)
  | LangDeclaration of (string * language)
 ;;
 
@@ -26,20 +36,23 @@ type program =
  | Output of language
  | Declaration of decs
  | Statement of language
- | WStatement of string
+ | WStatement of word
  | Statements of (program * program)
 ;;
 
 
-
+let rec solve_word = function
+ | WordLiteral(str) -> str
+ | WordVarialbe(var) -> Hashtbl.find word_hash var
+ | Concat(w1, w2) -> (solve_word w1)^(solve_word w2)
+;;
 
  (* Converts the data type into a set *)
 let rec convert_literal_lang = function
  | Empty_Set -> WordSet.empty 
- | Cons (word, more) -> WordSet.add word ( convert_literal_lang more )
+ | Cons (word, more) -> WordSet.add (solve_word word) ( convert_literal_lang more )
 ;;
  
-
 (* Retrieves the set ascociated with the variable or derived from the literal 
    @Returns a SET*)
 let rec solve_lang = function
@@ -52,11 +65,11 @@ let rec solve_lang = function
 
 let redeclare = function
  | LangDeclaration(str , vl) -> Hashtbl.replace lang_hash str (solve_lang vl)
- | WordDeclaration(str, vl) -> Hashtbl.replace  word_hash str  vl
+ | WordDeclaration(str, vl) -> Hashtbl.replace  word_hash str  (solve_word vl)
  | IntDeclaration(str, vl) -> Hashtbl.replace   int_hash  str  vl
 ;;
 
-let language_to_string lang = 
+let language_of_string lang = 
 	let rec aux (lst:string list) = 
 	match lst with
  		| [] -> "}"
@@ -67,7 +80,7 @@ let language_to_string lang =
 ;;
 (* Takes a WordSet obj and print_string's a set *)
 let print_language lang =
-	 print_string (language_to_string lang)
+	 print_string (language_of_string lang)
 ;;
 
 
@@ -87,8 +100,7 @@ let rec interpret (prog:program) =
 	match prog with
 	| Output (lang)-> (print_language lang); 
 	| Declaration(decObj) -> redeclare decObj;
-	| Statement( lang )-> print_string ("unassigned lang: "^(language_to_string lang)); 
-	| WStatement( word )-> print_string ("unassigned word:"^word^"\n");
-
+	| Statement( lang )-> print_string ("unassigned lang: "^(language_of_string lang)); 
+	| WStatement( word )-> print_string ("unassigned word:"^(solve_word word)^"\n");
 	| Statements ( head, tail ) -> interpret head; interpret tail;
 ;;

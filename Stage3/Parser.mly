@@ -3,9 +3,13 @@
 	open Path
 %}
 
+%token <int> INT
 %token <string> WORD
+%token <string> INT_VAR
+%token <string> WORD_VAR
+%token <string> LANG_VAR
 %token EXP_END EOL PROG_END
-%token LCURL RCURL EMPTY_SET COMMA
+%token LCURL RCURL EMPTY_SET COMMA EQUALS
 %token CONCAT
 %token UNION INTERSECT SUBTRACT
 %token OUTPUT 
@@ -28,7 +32,15 @@ expr :
  | languageExpr 		{ Statement($1) }
  | wordExpr 			{ WStatement($1) }
  | OUTPUT languageExpr { Output($2) }
+ | dec {Declaration( $1 )}
 ;
+
+dec:
+ | LANG_VAR EQUALS languageExpr { LangDeclaration ($1, $3) }
+ | WORD_VAR EQUALS wordExpr { WordDeclaration ($1, $3) }
+ | INT_VAR EQUALS INT { IntDeclaration ($1, $3) }
+ ;
+
 
 languageExpr :
  | LCURL langbody RCURL 		{ LangLiteral($2) }
@@ -36,6 +48,7 @@ languageExpr :
  | languageExpr UNION languageExpr { Union($1, $3) }
  | languageExpr INTERSECT languageExpr { Intersection($1, $3) }
  | languageExpr SUBTRACT languageExpr { Subtraction($1, $3) }
+ | LANG_VAR { LangVariable ( $1 ) }
 ;
 
 langbody :
@@ -44,7 +57,7 @@ langbody :
 ;
 
 wordExpr: 
- | WORD { $1 }
- | wordExpr CONCAT wordExpr { $1^$3 }
+ | WORD { WordLiteral ($1) }
+ | wordExpr CONCAT wordExpr { Concat($1, $3) }
+ | WORD_VAR { WordVarialbe ($1) } 
 ;
-

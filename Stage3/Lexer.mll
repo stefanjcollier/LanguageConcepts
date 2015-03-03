@@ -19,8 +19,13 @@ rule token = parse
 | "/\\" { INTERSECT }
 | "\\"	{ SUBTRACT }
 
+| '=' { EQUALS }
 | '^' { CONCAT }
 | ['a'-'z' ':']+ as wrd { WORD(wrd) }
+| ['0'-'9']+ as vl { INT(int_of_string vl) }
+| '#'['A'-'Z' 'a'-'z' '0'-'9']+ as var { INT_VAR(var) }
+| '"'['A'-'Z' 'a'-'z' '0'-'9']+ as var { WORD_VAR(var) }
+| '@'['A'-'Z' 'a'-'z' '0'-'9']+ as var { LANG_VAR(var) }
 
 | "</3" { PROG_END }
 | "Out" { OUTPUT }
