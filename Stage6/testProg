@@ -1,4 +1,5 @@
 Out {aaa,bbb} <3
 Out @Lang1 <3
 Out @Lang2 <3
+Out {:,:a,:b::} <3
 </3

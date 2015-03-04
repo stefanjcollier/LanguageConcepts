@@ -58,24 +58,6 @@ let rec convert_literal_lang = function
  | Cons (word, more) -> WordSet.add (solve_word word) ( convert_literal_lang more )
 ;;
  
-(*
-let rec yolo w1 w2 =
-	print_string (w1^w2)
-;;
-
-let rec somthiung s w =
-	WordSet.iter (yolo w) s
-;;
-let lang_concat l1 l2 =
-	let rec loop2 wrd1 wrd2 result =
-		result = WordSet.add result wrd1^wrd2
-	in
-	let rec loop1 set wrd result=
-	WordSet.iter (loop2 wrd) set 
-in
-	WordSet.iter (loop1 l2) l1
-;;
-*)
 
 let rec addWord (lst:string list) (wrd:string) =
  	match lst with
@@ -96,17 +78,6 @@ let lang_concat s1 s2 =
 	let res = list_concat (WordSet.elements s2) (WordSet.elements s1) in
 	List.fold_right WordSet.add res WordSet.empty
 ;;
-(*
-let only_regex l1 reg =
-	match l1 with
-	| [] -> []
-	| h::t -> if 
-;;
-let regex s1 reg =
-	let res = only_regex (WordSet.elements s1) reg in
-	List.fold_right WordSet.add res WordSet.empty
-;;
-*)
 
 (* Retrieves the set ascociated with the variable or derived from the literal 
    @Returns a SET*)

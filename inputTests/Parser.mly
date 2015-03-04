@@ -3,7 +3,6 @@
 	open Path
 %}
 
-%token <int> INT
 %token <string> WORD
 %token <string> INT_VAR
 %token <string> WORD_VAR
