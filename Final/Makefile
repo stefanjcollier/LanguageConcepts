@@ -15,4 +15,4 @@ all:
 	ocamlc -o mysplinterpreter inputlexer.cmo inputparser.cmo lexer.cmo parser.cmo str.cma path.cmo love.cmo
 
 clean:
-	rm mysplinterpreter *.cmo lexer.ml parser.ml parser.mli *.cmi inputlexer.ml inputparser.ml inputparser.mli love
+	rm mysplinterpreter *.cmo lexer.ml parser.ml parser.mli *.cmi inputlexer.ml inputparser.ml inputparser.mli 
