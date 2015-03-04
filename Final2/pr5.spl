@@ -1,0 +1,3 @@
+@Abc = {a,b,c} <3
+Out @Lang1^@Abc^@Abc <3
+</3
