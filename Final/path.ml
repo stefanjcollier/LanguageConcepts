@@ -49,10 +49,21 @@ type input =
  | MultiLangauges of (lang_literal * input)
 ;;
 
-let rec solve_word = function
- | WordLiteral(str) -> str
- | WordVarialbe(var) -> Hashtbl.find word_hash var
- | WordConcat(w1, w2) -> (solve_word w1)^(solve_word w2)
+let tidy (inp:string) = 
+	if inp  = ":"
+	then
+		inp
+	else 
+		Str.global_replace (Str.regexp ":")  ""	inp
+;;
+
+let solve_word wrd =
+	let rec aux = function
+	 | WordLiteral(str) -> str
+	 | WordVarialbe(var) -> Hashtbl.find word_hash var
+	 | WordConcat(w1, w2) -> (aux w1)^(aux w2)
+	in
+	tidy (aux wrd)
 ;;
 
  (* Converts the data type into a set *)
